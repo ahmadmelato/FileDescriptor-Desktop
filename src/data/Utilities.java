@@ -5,15 +5,18 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -167,6 +170,42 @@ public final class Utilities {
             Logger.getLogger(ImageLoader.class.getName()).log(Level.SEVERE, null, ex);
             return "";
         }
+    }
+    
+    
+    public static String getBaseUrl() {
+        BufferedReader reader = null;
+
+        try {
+            //getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
+            // Provide the path to your text file
+            String filePath = new File(new Utilities().getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParent() + "/config/url.conf";
+
+            // Create a FileReader object passing the file path
+            FileReader fileReader = new FileReader(filePath);
+
+            // Create a BufferedReader object passing the FileReader
+            reader = new BufferedReader(fileReader);
+
+            String line;
+            if ((line = reader.readLine()) != null) {
+                // Process each line of the file
+                reader.close();
+                fileReader.close();
+                return line;
+            }
+        } catch (IOException | URISyntaxException e) {
+            System.err.println(e.getLocalizedMessage());
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                System.err.println(e.getLocalizedMessage());
+            }
+        }
+        return "http://localhost:3000";
     }
 
     static public void initTable(JTable myTable, JScrollPane jScrollPane1) {

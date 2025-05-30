@@ -38,7 +38,7 @@ public class ClientAPI {
     public static int Filed = 0;
     public static int Run = -1;
 
-    public static final String BASE_URL = "http://localhost:3000";
+    public static final String BASE_URL = data.Utilities.getBaseUrl();
     private final InterfaceAPI interfaceAPI;
     public static ClientAPI clientAPI;
     public TokenInterceptor tokenInterceptor;

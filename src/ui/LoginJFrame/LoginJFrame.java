@@ -23,6 +23,7 @@ import ui.MainJFrame.MainJFrame;
 public class LoginJFrame extends javax.swing.JFrame {
 
     private final LoginViewModel loginViewModel;
+    private int x,y;
 
     public LoginJFrame() {
         FlatLightLaf.setup();
@@ -108,6 +109,16 @@ public class LoginJFrame extends javax.swing.JFrame {
         setUndecorated(true);
 
         jPanel1.setBackground(data.MyColor.BackColor);
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -360,6 +371,18 @@ public class LoginJFrame extends javax.swing.JFrame {
            password.requestFocus();
         }
     }//GEN-LAST:event_user_nameKeyPressed
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        x = evt.getX();
+        y = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        // TODO add your handling code here:
+        int xx = evt.getXOnScreen();
+        int yy = evt.getYOnScreen();
+        this.setLocation(xx - x, yy - y);
+    }//GEN-LAST:event_jPanel1MouseDragged
 
     /**
      * @param args the command line arguments
