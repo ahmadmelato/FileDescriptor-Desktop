@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +42,7 @@ public class MainViewModel {
     public final static MutableLiveData<List<FileModel>> filesLiveData = new MutableLiveData<>();
     public final MutableLiveData<List<UserModel>> usersLiveData = new MutableLiveData<>();
     public final MutableLiveData<Integer> progressValueLiveData = new MutableLiveData<>();
+    public final MutableLiveData<List<FileModel>> filesSendLiveData = new MutableLiveData<>();
 
     public MainViewModel(UserModel model) {
         aESAlog = new AESAlog(model);
@@ -252,6 +252,38 @@ public class MainViewModel {
             System.getLogger(MainViewModel.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             setProgressDeny("حدث خطا اثناء تنزيل الملف");
         }
+    }
+
+    public void get_send_files() {
+        setProgressRun();
+        ClientAPI.getClientAPI().get_send_files().enqueue(new Callback<ResponeBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponeBody> call, @NonNull Response<ResponeBody> response) {
+                if (response.code() == ClientAPI.OK) {
+                    assert response.body() != null;
+                    if (response.body().toString() != null) {
+                        try {
+                            String decryptedJson = aESAlog.decrypt(response.body().toString());
+                            Type listType = new TypeToken<List<FileModel>>() {
+                            }.getType();
+                            List<FileModel> fileList = new Gson().fromJson(decryptedJson, listType);
+                            filesSendLiveData.setValue(fileList);
+                        } catch (JsonSyntaxException e) {
+                            filesSendLiveData.setValue(Collections.emptyList());
+                        }
+                    }
+                    setProgressOK();
+                } else {
+                    setProgressDeny(Objects.requireNonNull(ClientAPI.parseError(response)));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponeBody> call, @NonNull Throwable t) {
+                setProgressFiled("فشلت العملية تاكد من الاتصال");
+                System.err.println(t.getMessage());
+            }
+        });
     }
 
 }

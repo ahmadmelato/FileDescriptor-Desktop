@@ -25,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
 
 /**
  *
@@ -144,6 +143,10 @@ public class ClientAPI {
 
     public Call<ResponeBody> get_receive_files() {
         return interfaceAPI.get_receive_files();
+    }
+    
+    public Call<ResponeBody> get_send_files() {
+        return interfaceAPI.get_send_files();
     }
     
     public Call<ResponeBody> get_all_users() {

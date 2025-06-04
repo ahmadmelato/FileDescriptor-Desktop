@@ -18,9 +18,7 @@ import java.util.List;
 import javax.crypto.SecretKey;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import model.FileModel;
 import model.UserModel;
-import ui.MainJFrame.FileItem;
 import ui.MainJFrame.MainViewModel;
 
 /**

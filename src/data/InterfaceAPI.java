@@ -38,6 +38,9 @@ public interface InterfaceAPI {
     @GET("/get_receive_files")
     Call<ResponeBody> get_receive_files();
     
+    @GET("/get_send_files")
+    Call<ResponeBody> get_send_files();
+    
     @GET("/get_all_users")
     Call<ResponeBody> get_all_users();
     

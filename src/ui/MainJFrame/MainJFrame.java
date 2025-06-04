@@ -4,7 +4,9 @@
  */
 package ui.MainJFrame;
 
+import data.ClientAPI;
 import data.Working;
+import io.socket.client.Socket;
 import java.awt.ComponentOrientation;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -12,6 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import model.FileModel;
 import model.UserModel;
+import ui.Dialog.NotificationDialog;
+import ui.FileSendJDialog.FileSendJDialog;
 import ui.SendFileJDialog.SendFileJDialog;
 
 /**
@@ -46,7 +50,7 @@ public class MainJFrame extends javax.swing.JFrame {
             cusButton1.setEnabled(!working.isRunning());
         });
 
-        mainViewModel.filesLiveData.observe((PropertyChangeEvent evt) -> {
+        MainViewModel.filesLiveData.observe((PropertyChangeEvent evt) -> {
             List<FileModel> fileModels = (List<FileModel>) evt.getNewValue();
             jPanelFiles.removeAll();
             for (FileModel fileModel : fileModels) {
@@ -55,6 +59,25 @@ public class MainJFrame extends javax.swing.JFrame {
             jPanelFiles.revalidate();
             jPanelFiles.repaint();
         });
+
+        ClientAPI.getSocket().on(Socket.EVENT_CONNECT, (Object... os) -> {
+            new NotificationDialog("متصل مع المخدم", NotificationDialog.INFO, 1500).setVisible(true);
+        });
+        ClientAPI.getSocket().on(Socket.EVENT_DISCONNECT, (Object... os) -> {
+            new NotificationDialog("انقطع الاتصال مع المخدم", NotificationDialog.ERORR, 2000).setVisible(true);
+        });
+
+        ClientAPI.getSocket().on("update", (Object... os) -> {
+            if (os.length > 0) {
+                Integer message = (Integer) os[0];
+                if (message == this.userModel.id) {
+                    mainViewModel.get_receive_files();
+                    new NotificationDialog("تم استلام ملف جديد", NotificationDialog.INFO, 2000).setVisible(true);
+                }
+            }
+        });
+
+        ClientAPI.getSocket().connect();
 
         mainViewModel.get_receive_files();
 
@@ -87,6 +110,7 @@ public class MainJFrame extends javax.swing.JFrame {
         cusButton2 = new data.CusButton();
         stateParProgress = new org.jdesktop.swingx.JXBusyLabel();
         stateParMsg = new javax.swing.JLabel();
+        cusButton3 = new data.CusButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -230,6 +254,21 @@ public class MainJFrame extends javax.swing.JFrame {
         stateParMsg.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         stateParMsg.setText("جاهز");
 
+        cusButton3.setForeground(new java.awt.Color(255, 255, 255));
+        cusButton3.setText("الملفات المرسلة");
+        cusButton3.setColor(data.MyColor.Red);
+        cusButton3.setColorClick(data.MyColor.Red);
+        cusButton3.setFocusPainted(false);
+        cusButton3.setFocusable(false);
+        cusButton3.setFont(new java.awt.Font("DIN Next LT Arabic", 1, 15)); // NOI18N
+        cusButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        cusButton3.setRadius(25);
+        cusButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cusButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -239,20 +278,25 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(6, 6, 6)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jClock1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(stateParMsg)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(stateParProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(15, 15, 15)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cusButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cusButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jClock1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(stateParMsg)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(stateParProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)))
+                            .addComponent(cusButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -269,9 +313,11 @@ public class MainJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cusButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cusButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cusButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(stateParMsg)
                             .addComponent(stateParProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -344,9 +390,15 @@ public class MainJFrame extends javax.swing.JFrame {
         SendFileJDialog.showDialog(this);
     }//GEN-LAST:event_cusButton2ActionPerformed
 
+    private void cusButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cusButton3ActionPerformed
+        // TODO add your handling code here:
+        FileSendJDialog.showDialog(this);
+    }//GEN-LAST:event_cusButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private data.CusButton cusButton1;
     private data.CusButton cusButton2;
+    private data.CusButton cusButton3;
     private ui.MainJFrame.FileItem fileItem1;
     private ui.MainJFrame.FileItem fileItem2;
     private ui.MainJFrame.FileItem fileItem3;
