@@ -52,7 +52,7 @@ public class FileSendModel {
         }
 
         public boolean isReciver() {
-            return recive_timestamp !a= null;
+            return recive_timestamp != null;
         }
     }
 
