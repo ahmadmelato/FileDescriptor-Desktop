@@ -448,10 +448,10 @@
         </Property>
         <Property name="text" type="java.lang.String" value="&#x627;&#x644;&#x645;&#x644;&#x641;&#x627;&#x62a; &#x627;&#x644;&#x645;&#x631;&#x633;&#x644;&#x629;"/>
         <Property name="color" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="data.MyColor.Red" type="code"/>
+          <Connection code="data.MyColor.Blue" type="code"/>
         </Property>
         <Property name="colorClick" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="data.MyColor.Red" type="code"/>
+          <Connection code="data.MyColor.Blue" type="code"/>
         </Property>
         <Property name="focusPainted" type="boolean" value="false"/>
         <Property name="focusable" type="boolean" value="false"/>

@@ -256,8 +256,8 @@ public class MainJFrame extends javax.swing.JFrame {
 
         cusButton3.setForeground(new java.awt.Color(255, 255, 255));
         cusButton3.setText("الملفات المرسلة");
-        cusButton3.setColor(data.MyColor.Red);
-        cusButton3.setColorClick(data.MyColor.Red);
+        cusButton3.setColor(data.MyColor.Blue);
+        cusButton3.setColorClick(data.MyColor.Blue);
         cusButton3.setFocusPainted(false);
         cusButton3.setFocusable(false);
         cusButton3.setFont(new java.awt.Font("DIN Next LT Arabic", 1, 15)); // NOI18N

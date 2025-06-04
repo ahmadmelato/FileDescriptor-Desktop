@@ -4,7 +4,12 @@
  */
 package ui.FileSendJDialog;
 
-import model.FileModel;
+import java.awt.ComponentOrientation;
+import java.awt.Insets;
+import java.util.List;
+import javax.swing.JCheckBox;
+import model.FileSendModel;
+import model.UserModel;
 
 /**
  *
@@ -12,7 +17,7 @@ import model.FileModel;
  */
 public class FileSendItem extends javax.swing.JPanel {
 
-    private FileModel fileModel;
+    private FileSendModel fileModel;
 
     public FileSendItem() {
         initComponents();
@@ -21,7 +26,7 @@ public class FileSendItem extends javax.swing.JPanel {
         jPanelUsers.repaint();
     }
 
-    public FileSendItem(FileModel fileModel) {
+    public FileSendItem(FileSendModel fileModel) {
         initComponents();
         this.fileModel = fileModel;
 
@@ -35,6 +40,21 @@ public class FileSendItem extends javax.swing.JPanel {
             jLabelSize.setText(fileModel.file_size + " بايت");
             jLabelName.setText(fileModel.file_name);
             jLabelDate.setText(fileModel.getCreateDate());
+            
+            List<FileSendModel.User> users = this.fileModel.users;
+            jPanelUsers.removeAll();
+            for (FileSendModel.User user : users) {
+                JCheckBox cc = new JCheckBox();
+                cc.setText(user.user_name + " (" + user.center_name + ")");
+                cc.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                cc.setFont(new java.awt.Font("DIN Next LT Arabic", 0, 15));
+                cc.setMargin(new Insets(5, 10, 5, 10));
+                cc.setSelected(user.isReciver());
+                cc.setEnabled(false);
+                jPanelUsers.add(cc);
+            }
+            jPanelUsers.revalidate();
+            jPanelUsers.repaint();
 
         }
 
@@ -91,7 +111,10 @@ public class FileSendItem extends javax.swing.JPanel {
         jCheckBox3.setText("jCheckBox3");
         jPanelUsers.add(jCheckBox3);
 
+        jPanelUsers.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
         jScrollPane1.setViewportView(jPanelUsers);
+        jScrollPane1.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

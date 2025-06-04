@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.FileModel;
+import model.FileSendModel;
 import model.ResponeBody;
 import model.UserModel;
 import okhttp3.ResponseBody;
@@ -42,7 +43,7 @@ public class MainViewModel {
     public final static MutableLiveData<List<FileModel>> filesLiveData = new MutableLiveData<>();
     public final MutableLiveData<List<UserModel>> usersLiveData = new MutableLiveData<>();
     public final MutableLiveData<Integer> progressValueLiveData = new MutableLiveData<>();
-    public final MutableLiveData<List<FileModel>> filesSendLiveData = new MutableLiveData<>();
+    public final MutableLiveData<List<FileSendModel>> filesSendLiveData = new MutableLiveData<>();
 
     public MainViewModel(UserModel model) {
         aESAlog = new AESAlog(model);
@@ -264,9 +265,9 @@ public class MainViewModel {
                     if (response.body().toString() != null) {
                         try {
                             String decryptedJson = aESAlog.decrypt(response.body().toString());
-                            Type listType = new TypeToken<List<FileModel>>() {
+                            Type listType = new TypeToken<List<FileSendModel>>() {
                             }.getType();
-                            List<FileModel> fileList = new Gson().fromJson(decryptedJson, listType);
+                            List<FileSendModel> fileList = new Gson().fromJson(decryptedJson, listType);
                             filesSendLiveData.setValue(fileList);
                         } catch (JsonSyntaxException e) {
                             filesSendLiveData.setValue(Collections.emptyList());

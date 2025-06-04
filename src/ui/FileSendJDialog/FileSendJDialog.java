@@ -10,6 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 import javax.swing.JOptionPane;
 import model.FileModel;
+import model.FileSendModel;
 import ui.MainJFrame.MainViewModel;
 
 /**
@@ -44,17 +45,17 @@ public class FileSendJDialog extends javax.swing.JDialog {
             stateParMsg.setText(working.getsSmg());
             stateParMsg.setForeground(working.getColor());
         });
-        
+
         mainViewModel.filesSendLiveData.observe((PropertyChangeEvent evt) -> {
-            List<FileModel> fileModels = (List<FileModel>) evt.getNewValue();
+            List<FileSendModel> fileModels = (List<FileSendModel>) evt.getNewValue();
             jPanelFiles.removeAll();
-            for (FileModel fileModel : fileModels) {
+            for (FileSendModel fileModel : fileModels) {
                 jPanelFiles.add(new FileSendItem(fileModel));
             }
             jPanelFiles.revalidate();
             jPanelFiles.repaint();
         });
-        
+
         mainViewModel.get_send_files();
 
     }
